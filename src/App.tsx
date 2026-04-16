@@ -1,12 +1,10 @@
-import { Button } from './components/ui/button'
-import './App.css'
+import { JsonEditor } from "@/features/editor/components/JsonEditor"
+import { AppLayout } from "@/features/layout/components/AppLayout"
+import { PreviewPanel } from "@/features/preview/components/PreviewPanel"
 
 function App() {
-
   return (
-    <>
-      <Button>Hello World</Button>
-    </>
+    <AppLayout leftPanel={<JsonEditor />} rightPanel={<PreviewPanel />} />
   )
 }
 
