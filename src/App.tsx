@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 import { JsonEditor } from "@/features/editor/components/JsonEditor"
 import { AppLayout } from "@/features/layout/components/AppLayout"
@@ -8,6 +8,25 @@ import { useTemplateRenderer } from "@/features/template/hooks/useTemplateRender
 import { useTemplateStore } from "@/features/template/hooks/useTemplateStore"
 
 const JSON_INPUT_STORAGE_KEY = "json_input"
+const THEME_STORAGE_KEY = "theme"
+
+type Theme = "light" | "dark"
+
+function getStoredTheme(): Theme {
+  if (typeof window === "undefined") {
+    return "light"
+  }
+
+  const stored = window.localStorage.getItem(THEME_STORAGE_KEY)
+
+  if (stored === "dark" || stored === "light") {
+    return stored
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light"
+}
 
 function getStoredJsonInput() {
   if (typeof window === "undefined") {
@@ -20,6 +39,7 @@ function getStoredJsonInput() {
 function App() {
   const [jsonInput, setJsonInput] = useState<string>(() => getStoredJsonInput())
   const [isTemplatePanelOpen, setIsTemplatePanelOpen] = useState(false)
+  const [theme, setTheme] = useState<Theme>(() => getStoredTheme())
 
   const {
     templates,
@@ -35,6 +55,7 @@ function App() {
   const { renderedHtml, error } = useTemplateRenderer({
     jsonInput,
     templateContent: activeTemplate?.content ?? null,
+    theme,
   })
 
   const activeTemplateContent = useMemo(
@@ -49,6 +70,19 @@ function App() {
 
     window.localStorage.setItem(JSON_INPUT_STORAGE_KEY, jsonInput)
   }, [jsonInput])
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return
+    }
+
+    window.localStorage.setItem(THEME_STORAGE_KEY, theme)
+    document.documentElement.classList.toggle("dark", theme === "dark")
+  }, [theme])
+
+  const handleToggleTheme = useCallback(() => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"))
+  }, [])
 
   const handleCreateTemplate = () => {
     createTemplate()
@@ -68,6 +102,7 @@ function App() {
       isTemplatePanelOpen={isTemplatePanelOpen}
       leftPanel={<JsonEditor onChange={setJsonInput} value={jsonInput} />}
       onTemplatePanelOpenChange={setIsTemplatePanelOpen}
+      onToggleTheme={handleToggleTheme}
       rightPanel={
         <PreviewPanel
           error={error}

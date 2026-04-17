@@ -39,6 +39,7 @@ type AppLayoutProps = {
   templatePanel: ReactNode
   isTemplatePanelOpen: boolean
   onTemplatePanelOpenChange: (isOpen: boolean) => void
+  onToggleTheme: () => void
 }
 
 export function AppLayout({
@@ -47,6 +48,7 @@ export function AppLayout({
   templatePanel,
   isTemplatePanelOpen,
   onTemplatePanelOpenChange,
+  onToggleTheme,
 }: AppLayoutProps) {
   const templatePanelRef = usePanelRef()
   const [templatePanelSize, setTemplatePanelSize] = useState<number>(() =>
@@ -126,6 +128,7 @@ export function AppLayout({
         <Toolbar
           isTemplatePanelOpen={isTemplatePanelOpen}
           onToggleTemplatePanel={handleTemplatePanelToggle}
+          onToggleTheme={onToggleTheme}
         />
         <div className="min-h-0 flex-1">
           <ResizablePanelGroup direction="vertical">

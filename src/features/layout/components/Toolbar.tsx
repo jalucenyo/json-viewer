@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button"
 type ToolbarProps = {
   isTemplatePanelOpen: boolean
   onToggleTemplatePanel: () => void
+  onToggleTheme: () => void
 }
 
 export function Toolbar({
   isTemplatePanelOpen,
   onToggleTemplatePanel,
+  onToggleTheme,
 }: ToolbarProps) {
   return (
     <header className="flex h-10 shrink-0 items-center justify-between border-b border-border px-3">
@@ -25,7 +27,7 @@ export function Toolbar({
           <RowsPlusBottom className="size-3" />
           {isTemplatePanelOpen ? "Hide templates" : "Show templates"}
         </Button>
-        <Button aria-label="Toggle theme" size="icon-xs" variant="outline">
+        <Button aria-label="Toggle theme" onClick={onToggleTheme} size="icon-xs" variant="outline">
           <Moon className="size-3" />
         </Button>
       </div>

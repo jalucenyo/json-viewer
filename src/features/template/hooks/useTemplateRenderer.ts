@@ -1,11 +1,13 @@
 import Handlebars from "handlebars"
 import { useEffect, useState } from "react"
 
+import { buildPreviewDocument } from "@/features/preview/lib/preview-styles"
 import { debounce } from "@/lib/debounce"
 
 type UseTemplateRendererParams = {
   jsonInput: string
   templateContent: string | null
+  theme: "light" | "dark"
 }
 
 type TemplateRenderState = {
@@ -28,6 +30,7 @@ function getErrorMessage(error: unknown): string {
 export function useTemplateRenderer({
   jsonInput,
   templateContent,
+  theme,
 }: UseTemplateRendererParams): TemplateRenderState {
   const [state, setState] = useState<TemplateRenderState>({
     renderedHtml: "",
@@ -36,7 +39,11 @@ export function useTemplateRenderer({
 
   useEffect(() => {
     const renderTemplate = debounce(
-      (nextJsonInput: string, nextTemplateContent: string | null) => {
+      (
+        nextJsonInput: string,
+        nextTemplateContent: string | null,
+        nextTheme: "light" | "dark"
+      ) => {
         if (!nextTemplateContent) {
           setState({ renderedHtml: "", error: null })
           return
@@ -45,7 +52,8 @@ export function useTemplateRenderer({
         try {
           const parsedJson = nextJsonInput.trim() ? JSON.parse(nextJsonInput) : {}
           const compiledTemplate = Handlebars.compile(nextTemplateContent)
-          const renderedHtml = compiledTemplate(parsedJson)
+          const rawHtml = compiledTemplate(parsedJson)
+          const renderedHtml = buildPreviewDocument(rawHtml, nextTheme)
 
           setState({
             renderedHtml,
@@ -61,12 +69,12 @@ export function useTemplateRenderer({
       300
     )
 
-    renderTemplate(jsonInput, templateContent)
+    renderTemplate(jsonInput, templateContent, theme)
 
     return () => {
       renderTemplate.cancel()
     }
-  }, [jsonInput, templateContent])
+  }, [jsonInput, templateContent, theme])
 
   return state
 }
