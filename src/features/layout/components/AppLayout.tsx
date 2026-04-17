@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from "react"
-import type { PanelSize } from "react-resizable-panels"
+import { useEffect, useState, type ReactNode } from "react"
+import { usePanelRef, type PanelSize } from "react-resizable-panels"
 
 import {
   ResizableHandle,
@@ -48,14 +48,49 @@ export function AppLayout({
   isTemplatePanelOpen,
   onTemplatePanelOpenChange,
 }: AppLayoutProps) {
+  const templatePanelRef = usePanelRef()
   const [templatePanelSize, setTemplatePanelSize] = useState<number>(() =>
     getStoredTemplatePanelHeight()
   )
+  const [isTemplatePanelCollapsed, setIsTemplatePanelCollapsed] = useState(
+    !isTemplatePanelOpen
+  )
+
+  useEffect(() => {
+    const panel = templatePanelRef.current
+
+    if (!panel) {
+      return
+    }
+
+    if (isTemplatePanelOpen && panel.isCollapsed()) {
+      setIsTemplatePanelCollapsed(false)
+      panel.expand()
+      panel.resize(`${templatePanelSize}%`)
+      return
+    }
+
+    if (!isTemplatePanelOpen && !panel.isCollapsed()) {
+      setIsTemplatePanelCollapsed(true)
+      panel.collapse()
+    }
+  }, [isTemplatePanelOpen, templatePanelRef])
 
   const handleTemplatePanelResize = (size: PanelSize) => {
     if (size.asPercentage <= 0) {
-      onTemplatePanelOpenChange(false)
+      setIsTemplatePanelCollapsed(true)
+
+      if (isTemplatePanelOpen) {
+        onTemplatePanelOpenChange(false)
+      }
+
       return
+    }
+
+    setIsTemplatePanelCollapsed(false)
+
+    if (!isTemplatePanelOpen) {
+      onTemplatePanelOpenChange(true)
     }
 
     const nextSize = clampTemplatePanelHeight(size.asPercentage)
@@ -67,14 +102,30 @@ export function AppLayout({
     }
   }
 
+  const handleTemplatePanelToggle = () => {
+    const panel = templatePanelRef.current
+
+    if (!panel) {
+      return
+    }
+
+    if (panel.isCollapsed()) {
+      setIsTemplatePanelCollapsed(false)
+      panel.expand()
+      panel.resize(`${templatePanelSize}%`)
+      return
+    }
+
+    setIsTemplatePanelCollapsed(true)
+    panel.collapse()
+  }
+
   return (
     <div className="h-screen w-screen overflow-hidden bg-background text-foreground">
       <div className="flex h-full min-h-0 flex-col">
         <Toolbar
           isTemplatePanelOpen={isTemplatePanelOpen}
-          onToggleTemplatePanel={() =>
-            onTemplatePanelOpenChange(!isTemplatePanelOpen)
-          }
+          onToggleTemplatePanel={handleTemplatePanelToggle}
         />
         <div className="min-h-0 flex-1">
           <ResizablePanelGroup direction="vertical">
@@ -89,18 +140,20 @@ export function AppLayout({
                 </ResizablePanel>
               </ResizablePanelGroup>
             </ResizablePanel>
-            {isTemplatePanelOpen ? (
-              <>
-                <ResizableHandle withHandle />
-                <ResizablePanel
-                  defaultSize={`${templatePanelSize}%`}
-                  minSize={`${MIN_TEMPLATE_PANEL_HEIGHT}%`}
-                  onResize={handleTemplatePanelResize}
-                >
-                  <div className="h-full w-full">{templatePanel}</div>
-                </ResizablePanel>
-              </>
-            ) : null}
+            <ResizableHandle
+              className={isTemplatePanelCollapsed ? "hidden" : undefined}
+              withHandle
+            />
+            <ResizablePanel
+              collapsedSize="0%"
+              collapsible
+              defaultSize={`${templatePanelSize}%`}
+              minSize={`${MIN_TEMPLATE_PANEL_HEIGHT}%`}
+              onResize={handleTemplatePanelResize}
+              panelRef={templatePanelRef}
+            >
+              <div className="h-full w-full">{templatePanel}</div>
+            </ResizablePanel>
           </ResizablePanelGroup>
         </div>
       </div>
