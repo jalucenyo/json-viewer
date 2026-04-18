@@ -1,15 +1,17 @@
-import { Moon, RowsPlusBottom } from "@phosphor-icons/react"
+import { Moon, RowsPlusBottom, Sun } from "@phosphor-icons/react"
 
 import { Button } from "@/components/ui/button"
 
 type ToolbarProps = {
   isTemplatePanelOpen: boolean
+  theme: "light" | "dark"
   onToggleTemplatePanel: () => void
   onToggleTheme: () => void
 }
 
 export function Toolbar({
   isTemplatePanelOpen,
+  theme,
   onToggleTemplatePanel,
   onToggleTheme,
 }: ToolbarProps) {
@@ -28,7 +30,7 @@ export function Toolbar({
           {isTemplatePanelOpen ? "Hide templates" : "Show templates"}
         </Button>
         <Button aria-label="Toggle theme" onClick={onToggleTheme} size="icon-xs" variant="outline">
-          <Moon className="size-3" />
+          {theme === "dark" ? <Sun className="size-3" /> : <Moon className="size-3" />}
         </Button>
       </div>
     </header>

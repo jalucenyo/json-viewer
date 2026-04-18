@@ -11,6 +11,7 @@ type TemplateManagerProps = {
   templates: Template[]
   activeTemplateId: string | null
   activeTemplateContent: string
+  theme: "light" | "dark"
   onCreateTemplate: () => void
   onSelectTemplate: (id: string) => void
   onRenameTemplate: (id: string, name: string) => void
@@ -22,6 +23,7 @@ export function TemplateManager({
   templates,
   activeTemplateId,
   activeTemplateContent,
+  theme,
   onCreateTemplate,
   onSelectTemplate,
   onRenameTemplate,
@@ -46,6 +48,7 @@ export function TemplateManager({
           <TemplateEditor
             activeTemplateId={activeTemplateId}
             onChange={onUpdateTemplateContent}
+            theme={theme}
             value={activeTemplateContent}
           />
         </ResizablePanel>

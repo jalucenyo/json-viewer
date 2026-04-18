@@ -1,11 +1,12 @@
 import Editor from "@monaco-editor/react"
 
 type JsonEditorProps = {
+  theme: "light" | "dark"
   value: string
   onChange: (nextValue: string) => void
 }
 
-export function JsonEditor({ value, onChange }: JsonEditorProps) {
+export function JsonEditor({ theme, value, onChange }: JsonEditorProps) {
   return (
     <div className="h-full w-full">
       <Editor
@@ -18,7 +19,7 @@ export function JsonEditor({ value, onChange }: JsonEditorProps) {
           minimap: { enabled: false },
           scrollBeyondLastLine: false,
         }}
-        theme="light"
+        theme={theme === "dark" ? "vs-dark" : "light"}
         value={value}
         width="100%"
       />

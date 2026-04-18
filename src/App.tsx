@@ -100,7 +100,7 @@ function App() {
   return (
     <AppLayout
       isTemplatePanelOpen={isTemplatePanelOpen}
-      leftPanel={<JsonEditor onChange={setJsonInput} value={jsonInput} />}
+      leftPanel={<JsonEditor onChange={setJsonInput} theme={theme} value={jsonInput} />}
       onTemplatePanelOpenChange={setIsTemplatePanelOpen}
       onToggleTheme={handleToggleTheme}
       rightPanel={
@@ -111,6 +111,7 @@ function App() {
           templatesCount={templates.length}
         />
       }
+      theme={theme}
       templatePanel={
         <TemplateManager
           activeTemplateContent={activeTemplateContent}
@@ -120,6 +121,7 @@ function App() {
           onRenameTemplate={renameTemplate}
           onSelectTemplate={selectTemplate}
           onUpdateTemplateContent={handleUpdateTemplateContent}
+          theme={theme}
           templates={templates}
         />
       }

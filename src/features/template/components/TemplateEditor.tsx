@@ -6,12 +6,14 @@ import { useTemplateValidation } from "@/features/template/hooks/useTemplateVali
 
 type TemplateEditorProps = {
   activeTemplateId: string | null
+  theme: "light" | "dark"
   value: string
   onChange: (nextValue: string) => void
 }
 
 export function TemplateEditor({
   activeTemplateId,
+  theme,
   value,
   onChange,
 }: TemplateEditorProps) {
@@ -51,7 +53,7 @@ export function TemplateEditor({
           minimap: { enabled: false },
           scrollBeyondLastLine: false,
         }}
-        theme="light"
+        theme={theme === "dark" ? "vs-dark" : "light"}
         value={value}
         width="100%"
       />

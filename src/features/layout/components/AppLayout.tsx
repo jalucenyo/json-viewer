@@ -37,6 +37,7 @@ type AppLayoutProps = {
   leftPanel: ReactNode
   rightPanel: ReactNode
   templatePanel: ReactNode
+  theme: "light" | "dark"
   isTemplatePanelOpen: boolean
   onTemplatePanelOpenChange: (isOpen: boolean) => void
   onToggleTheme: () => void
@@ -46,6 +47,7 @@ export function AppLayout({
   leftPanel,
   rightPanel,
   templatePanel,
+  theme,
   isTemplatePanelOpen,
   onTemplatePanelOpenChange,
   onToggleTheme,
@@ -127,6 +129,7 @@ export function AppLayout({
       <div className="flex h-full min-h-0 flex-col">
         <Toolbar
           isTemplatePanelOpen={isTemplatePanelOpen}
+          theme={theme}
           onToggleTemplatePanel={handleTemplatePanelToggle}
           onToggleTheme={onToggleTheme}
         />
