@@ -1,6 +1,6 @@
-import { Moon, RowsPlusBottom, Sun } from "@phosphor-icons/react"
+import { Bug, Moon, RowsPlusBottom, Sun } from "@phosphor-icons/react"
 
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 
 type ToolbarProps = {
   isTemplatePanelOpen: boolean
@@ -21,6 +21,25 @@ export function Toolbar({
         JSON Template Visualizer
       </h1>
       <div className="flex items-center gap-2">
+        <a
+          href="https://github.com/jalucenyo/json-viewer"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <img
+            alt="GitHub stars"
+            src="https://img.shields.io/github/stars/jalucenyo/json-viewer?style=social"
+          />
+        </a>
+        <a
+          className={buttonVariants({ size: "xs", variant: "outline" })}
+          href="https://github.com/jalucenyo/json-viewer/issues/new?template=bug_report.md"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Bug className="size-3" />
+          Report Issue
+        </a>
         <Button
           onClick={onToggleTemplatePanel}
           size="xs"
