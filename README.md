@@ -15,10 +15,7 @@
 
 </div>
 
----
-
-<!-- TODO: Add animated GIF demo here -->
-<!-- ![JSON Template Visualizer Demo](docs/demo.gif) -->
+[![Ver Demo](https://github.com/jalucenyo/json-viewer/raw/main/docs/demo.gif)](https://github.com/jalucenyo/json-viewer/raw/main/docs/demo.gif)
 
 ---
 
