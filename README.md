@@ -1,4 +1,4 @@
-# JSON Visualizer
+# JSON Template Visualizer
 
 <div align="center">
 
@@ -9,52 +9,39 @@
 [![Vite](https://img.shields.io/badge/Vite-Fast-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 
-*Paste JSON + write a Handlebars template and get a live HTML preview instantly.*
+*Turn any JSON payload into a readable HTML view with live Handlebars templates.*
 
 [**Live Demo ->**](https://jsonview.lucenyo.dev/)
 
 </div>
 
-![Ver Demo](https://raw.githubusercontent.com/jalucenyo/json-viewer/main/doc/snapshots/json_view.gif)
+![View Demo](https://raw.githubusercontent.com/jalucenyo/json-viewer/main/doc/snapshots/json_view.gif)
 
 ---
 
-## Description
+## Why This Exists
 
-JSON Template Visualizer is a client-side web tool that transforms raw JSON data into meaningful, human-readable HTML using Handlebars templates.
+Reading large JSON payloads is slow, noisy, and hard to present.
 
-Paste your JSON, write a template, and see the result rendered live with zero backend setup.
+This project helps you focus on relevant data by transforming raw JSON into custom HTML views with Handlebars, in real time, directly in the browser.
 
 Use cases:
-- API debugging
+- API debugging and payload inspection
 - Logs and events visualization
-- Demo presentations with clean formatted data
-- Quick data transformation from JSON to custom views
+- Demo presentations with cleaner, audience-friendly output
+- Fast JSON-to-view transformations without backend setup
 
-## Motivation
+## What You Get
 
-I was tired of looking at huge JSON payloads where the important information was hard to find.
-
-I was also tired of boring demos where I had to show endless raw JSON that nobody really understood.
-
-So I built this tool to focus only on what matters. With templates, I can shape the output to show exactly what I want to communicate.
-
-No more boring demos. Now I can present the important data directly, clearly, and with context.
-
-## Tech Stack
-
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| Framework | React 19 | UI layer |
-| Language | TypeScript (strict) | Type-safe code |
-| Build Tool | Vite | Fast development and builds |
-| Styling | Tailwind CSS v4 | Utility-first styles |
-| UI | shadcn/ui + Base UI | Accessible component primitives |
-| Editors | Monaco Editor | JSON and template editing |
-| Templating | Handlebars | Compile and render templates |
-| Icons | Phosphor Icons | UI iconography |
-| Font | JetBrains Mono | Editor typography |
-| Persistence | localStorage | Save input, templates, and theme |
+- Monaco-based JSON editor
+- Monaco-based Handlebars template editor
+- Live HTML preview rendered in a sandboxed iframe
+- Multiple templates (create, select, rename, delete)
+- Handlebars syntax validation with Monaco markers
+- JSON parse and template render error feedback
+- Light and dark theme toggle
+- localStorage persistence for JSON, templates, active template, and theme
+- Fully client-side architecture (no backend required)
 
 ## Quick Start
 
@@ -95,33 +82,86 @@ npm run dev
 | `npm run lint` | Run ESLint |
 | `npm run preview` | Preview production build |
 
-## How It Works
+## How To Use
 
-```
-JSON + Template -> parse -> compile -> render -> preview
-```
-
-1. Paste your JSON in the JSON editor.
+1. Paste your JSON into the JSON editor.
 2. Open the templates panel.
-3. Create a template.
-4. Write Handlebars syntax to map fields from your JSON.
-5. See the HTML preview update in real time.
+3. Create a new template.
+4. Write Handlebars syntax that maps fields from your JSON.
+5. See rendered output update live in the preview panel.
 
-Example template:
+Tips:
+- Create multiple templates for different audiences.
+- Switch templates to compare different views of the same payload.
+- Theme and content persist automatically in localStorage.
+
+## Example
+
+Input JSON:
+
+```json
+{
+  "title": "Server Health",
+  "items": [
+    { "name": "api", "status": "ok" },
+    { "name": "worker", "status": "degraded" }
+  ]
+}
+```
+
+Handlebars template:
 
 ```handlebars
 <h1>{{title}}</h1>
 <ul>
   {{#each items}}
-    <li>{{this.name}} - {{this.value}}</li>
+    <li>{{name}}: {{status}}</li>
   {{/each}}
 </ul>
 ```
 
-Tips:
-- Create multiple templates for different audiences or views.
-- Switch templates to compare presentations of the same JSON.
-- Theme and content are persisted automatically in localStorage.
+Rendered result:
+
+```html
+<h1>Server Health</h1>
+<ul>
+  <li>api: ok</li>
+  <li>worker: degraded</li>
+</ul>
+```
+
+## How It Works
+
+```text
+JSON + Template -> parse -> compile -> render -> preview
+```
+
+Implementation details:
+- JSON is parsed from editor input.
+- Templates are compiled with `Handlebars.compile(...)`.
+- Rendering is debounced by 300ms.
+- Preview HTML is wrapped into a full document and injected into `iframe srcDoc`.
+- Preview runs with `sandbox=""` for isolation.
+- State persists in localStorage keys:
+  - `json_input`
+  - `templates`
+  - `active_template_id`
+  - `theme`
+
+## Tech Stack
+
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| Framework | React 19 | UI layer |
+| Language | TypeScript (strict) | Type-safe code |
+| Build Tool | Vite | Fast development and builds |
+| Styling | Tailwind CSS v4 | Utility-first styles |
+| UI | shadcn/ui + Base UI | Accessible component primitives |
+| Editors | Monaco Editor | JSON and template editing |
+| Templating | Handlebars | Compile and render templates |
+| Icons | Phosphor Icons | UI iconography |
+| Font | JetBrains Mono | Editor typography |
+| Persistence | localStorage | Save input, templates, and theme |
 
 ## Project Structure
 
@@ -132,25 +172,17 @@ json-viewer/
 |   |   |-- editor/            # Monaco JSON editor
 |   |   |-- layout/            # App shell, toolbar, resizable panels
 |   |   |-- preview/           # Live HTML preview
-|   |   |-- template/          # Template CRUD and rendering
+|   |   |-- template/          # Template CRUD, validation, and rendering
 |   |-- components/ui/         # shadcn/ui primitives
 |   |-- lib/                   # Shared utilities
 |   |-- App.tsx
 |   |-- main.tsx
-|-- templates/                 # Example templates
+|-- doc/snapshots/             # GIF and MP4 demos
 |-- public/
 |-- package.json
 ```
 
 ## Roadmap
-
-Current capabilities:
-- Monaco-based JSON editing
-- Handlebars template editor
-- Live HTML preview
-- Template management (create, rename, delete)
-- Dark mode persistence
-- Resizable layout
 
 Future features:
 - Auto templates based on detected JSON formats
@@ -169,15 +201,6 @@ Contributions are welcome.
 4. Run checks (`npm run lint` and `npm run build`)
 5. Commit with a descriptive message
 6. Push and open a Pull Request
-
-## Resources
-
-- [React Documentation](https://react.dev/)
-- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
-- [Vite Documentation](https://vite.dev/guide/)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [Handlebars Documentation](https://handlebarsjs.com/guide/)
-- [Monaco Editor](https://microsoft.github.io/monaco-editor/)
 
 ## License
 
