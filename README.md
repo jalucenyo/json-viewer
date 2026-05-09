@@ -15,7 +15,7 @@
 
 </div>
 
-[![Ver Demo](https://github.com/jalucenyo/json-viewer/raw/main/docs/demo.gif)](https://github.com/jalucenyo/json-viewer/raw/main/docs/demo.gif)
+![Ver Demo](https://raw.githubusercontent.com/jalucenyo/json-viewer/main/doc/snapshots/json_view.gif)
 
 ---
 
