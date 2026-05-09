@@ -9,7 +9,7 @@
 [![Vite](https://img.shields.io/badge/Vite-Fast-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 
-*Turn any JSON payload into a readable HTML view with live Handlebars templates.*
+*Stop showing raw JSON in demos. Paste data, write a Handlebars template, and get a readable HTML preview instantly.*
 
 [**Live Demo ->**](https://jsonview.lucenyo.dev/)
 
@@ -19,31 +19,36 @@
 
 ---
 
-## Why This Exists
+## 💡 Why this exists
 
-Reading large JSON payloads is slow, noisy, and hard to present.
+There is always that awkward demo moment where someone says: "and here is the API response"... then 2,000 lines of JSON fill the screen.
 
-This project helps you focus on relevant data by transforming raw JSON into custom HTML views with Handlebars, in real time, directly in the browser.
+This project solves that by separating three things:
+- **Data** (your JSON)
+- **Template** (Handlebars)
+- **Preview** (live HTML)
 
-Use cases:
-- API debugging and payload inspection
-- Logs and events visualization
-- Demo presentations with cleaner, audience-friendly output
-- Fast JSON-to-view transformations without backend setup
+So instead of showing raw payloads, you show meaningful, readable views.
 
-## What You Get
+## ✨ What you get
 
 - Monaco-based JSON editor
 - Monaco-based Handlebars template editor
-- Live HTML preview rendered in a sandboxed iframe
+- Live HTML preview in a sandboxed iframe
 - Multiple templates (create, select, rename, delete)
-- Handlebars syntax validation with Monaco markers
-- JSON parse and template render error feedback
-- Light and dark theme toggle
-- localStorage persistence for JSON, templates, active template, and theme
-- Fully client-side architecture (no backend required)
+- Handlebars validation markers in editor
+- Clear JSON parse and template render errors
+- Light/dark theme toggle
+- localStorage persistence for JSON, templates, and theme
+- Fully client-side (no backend required)
 
-## Quick Start
+## 📝 Read the full story
+
+I wrote a blog post about why I built this, the real problem it solves, and what I learned while using it in demos and debugging sessions.
+
+👉 [Read the article: JSON Viewer, deja de mostrar JSON crudo en tus demos](https://www.lucenyo.dev/blog/json-viewer-visualizador-interactivo)
+
+## ⚡ Quickstart
 
 ### Prerequisites
 
@@ -71,31 +76,31 @@ npm install
 npm run dev
 ```
 
-4. Open the app at `http://localhost:5173`
+4. Open `http://localhost:5173`
 
-### Available Scripts
+### Scripts
 
 | Command | Description |
 |---------|-------------|
 | `npm run dev` | Start Vite dev server |
-| `npm run build` | TypeScript check and production build |
+| `npm run build` | TypeScript check + production build |
 | `npm run lint` | Run ESLint |
 | `npm run preview` | Preview production build |
 
-## How To Use
+## 🧪 How to use it
 
-1. Paste your JSON into the JSON editor.
-2. Open the templates panel.
-3. Create a new template.
-4. Write Handlebars syntax that maps fields from your JSON.
-5. See rendered output update live in the preview panel.
+1. Paste your JSON into the left editor.
+2. Open templates panel.
+3. Create a template.
+4. Write Handlebars syntax.
+5. Watch preview update live.
 
 Tips:
-- Create multiple templates for different audiences.
-- Switch templates to compare different views of the same payload.
-- Theme and content persist automatically in localStorage.
+- Create different templates for different audiences.
+- Switch templates to compare views of the same data.
+- Your content is persisted automatically in localStorage.
 
-## Example
+## 🧩 Example
 
 Input JSON:
 
@@ -130,7 +135,7 @@ Rendered result:
 </ul>
 ```
 
-## How It Works
+## ⚙️ How it works
 
 ```text
 JSON + Template -> parse -> compile -> render -> preview
@@ -140,58 +145,36 @@ Implementation details:
 - JSON is parsed from editor input.
 - Templates are compiled with `Handlebars.compile(...)`.
 - Rendering is debounced by 300ms.
-- Preview HTML is wrapped into a full document and injected into `iframe srcDoc`.
-- Preview runs with `sandbox=""` for isolation.
+- Preview is injected via `iframe srcDoc` with `sandbox=""`.
 - State persists in localStorage keys:
   - `json_input`
   - `templates`
   - `active_template_id`
   - `theme`
 
-## Tech Stack
+## 🧱 Tech stack
 
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| Framework | React 19 | UI layer |
-| Language | TypeScript (strict) | Type-safe code |
-| Build Tool | Vite | Fast development and builds |
-| Styling | Tailwind CSS v4 | Utility-first styles |
-| UI | shadcn/ui + Base UI | Accessible component primitives |
-| Editors | Monaco Editor | JSON and template editing |
-| Templating | Handlebars | Compile and render templates |
-| Icons | Phosphor Icons | UI iconography |
-| Font | JetBrains Mono | Editor typography |
-| Persistence | localStorage | Save input, templates, and theme |
+| Component | Technology |
+|-----------|------------|
+| Framework | React 19 |
+| Language | TypeScript (strict) |
+| Build Tool | Vite |
+| Styling | Tailwind CSS v4 |
+| UI | shadcn/ui + Base UI |
+| Editors | Monaco Editor |
+| Templating | Handlebars |
+| Icons | Phosphor Icons |
+| Persistence | localStorage |
 
-## Project Structure
+## 🗺️ Roadmap
 
-```text
-json-viewer/
-|-- src/
-|   |-- features/
-|   |   |-- editor/            # Monaco JSON editor
-|   |   |-- layout/            # App shell, toolbar, resizable panels
-|   |   |-- preview/           # Live HTML preview
-|   |   |-- template/          # Template CRUD, validation, and rendering
-|   |-- components/ui/         # shadcn/ui primitives
-|   |-- lib/                   # Shared utilities
-|   |-- App.tsx
-|   |-- main.tsx
-|-- doc/snapshots/             # GIF and MP4 demos
-|-- public/
-|-- package.json
-```
-
-## Roadmap
-
-Future features:
 - Auto templates based on detected JSON formats
 - Automatic JSON formatting
 - JSON structure graphs
 - Data analysis charts
 - Template sharing
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome.
 
@@ -202,7 +185,7 @@ Contributions are welcome.
 5. Commit with a descriptive message
 6. Push and open a Pull Request
 
-## License
+## 📄 License
 
 This project is under the MIT License. See [LICENSE](LICENSE) for details.
 
