@@ -11,24 +11,30 @@ type TemplateManagerProps = {
   templates: Template[]
   activeTemplateId: string | null
   activeTemplateContent: string
+  canExport: boolean
   theme: "light" | "dark"
   onCreateTemplate: () => void
   onSelectTemplate: (id: string) => void
   onRenameTemplate: (id: string, name: string) => void
   onDeleteTemplate: (id: string) => void
   onUpdateTemplateContent: (content: string) => void
+  onExportActiveTemplate: () => void
+  onImportTemplate: () => void
 }
 
 export function TemplateManager({
   templates,
   activeTemplateId,
   activeTemplateContent,
+  canExport,
   theme,
   onCreateTemplate,
   onSelectTemplate,
   onRenameTemplate,
   onDeleteTemplate,
   onUpdateTemplateContent,
+  onExportActiveTemplate,
+  onImportTemplate,
 }: TemplateManagerProps) {
   return (
     <div className="h-full w-full border-t border-border bg-background">
@@ -36,8 +42,11 @@ export function TemplateManager({
         <ResizablePanel defaultSize={26} minSize={18}>
           <TemplateList
             activeTemplateId={activeTemplateId}
+            canExport={canExport}
             onCreateTemplate={onCreateTemplate}
             onDeleteTemplate={onDeleteTemplate}
+            onExportActiveTemplate={onExportActiveTemplate}
+            onImportTemplate={onImportTemplate}
             onRenameTemplate={onRenameTemplate}
             onSelectTemplate={onSelectTemplate}
             templates={templates}
