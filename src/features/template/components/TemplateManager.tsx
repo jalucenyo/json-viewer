@@ -19,7 +19,6 @@ type TemplateManagerProps = {
   onDeleteTemplate: (id: string) => void
   onUpdateTemplateContent: (content: string) => void
   onExportActiveTemplate: () => void
-  onImportTemplate: () => void
 }
 
 export function TemplateManager({
@@ -34,7 +33,6 @@ export function TemplateManager({
   onDeleteTemplate,
   onUpdateTemplateContent,
   onExportActiveTemplate,
-  onImportTemplate,
 }: TemplateManagerProps) {
   return (
     <div className="h-full w-full border-t border-border bg-background">
@@ -46,7 +44,6 @@ export function TemplateManager({
             onCreateTemplate={onCreateTemplate}
             onDeleteTemplate={onDeleteTemplate}
             onExportActiveTemplate={onExportActiveTemplate}
-            onImportTemplate={onImportTemplate}
             onRenameTemplate={onRenameTemplate}
             onSelectTemplate={onSelectTemplate}
             templates={templates}

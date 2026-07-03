@@ -1,4 +1,4 @@
-import { Copy, Plus, UploadSimple } from "@phosphor-icons/react"
+import { Copy, Plus } from "@phosphor-icons/react"
 
 import { Button } from "@/components/ui/button"
 import { TemplateListItem } from "@/features/template/components/TemplateListItem"
@@ -13,7 +13,6 @@ type TemplateListProps = {
   onRenameTemplate: (id: string, name: string) => void
   onDeleteTemplate: (id: string) => void
   onExportActiveTemplate: () => void
-  onImportTemplate: () => void
 }
 
 export function TemplateList({
@@ -25,7 +24,6 @@ export function TemplateList({
   onRenameTemplate,
   onDeleteTemplate,
   onExportActiveTemplate,
-  onImportTemplate,
 }: TemplateListProps) {
   return (
     <div className="flex h-full min-h-0 flex-col border-r border-border bg-background">
@@ -43,14 +41,6 @@ export function TemplateList({
             variant="outline"
           >
             <Copy className="size-3" />
-          </Button>
-          <Button
-            aria-label="Import template"
-            onClick={onImportTemplate}
-            size="icon-xs"
-            variant="outline"
-          >
-            <UploadSimple className="size-3" />
           </Button>
           <Button onClick={onCreateTemplate} size="xs" variant="outline">
             <Plus className="size-3" />

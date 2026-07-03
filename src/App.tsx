@@ -55,7 +55,6 @@ function AppContent() {
     updateTemplateContent,
     deleteTemplate,
     exportActiveTemplate,
-    importTemplate,
   } = useTemplateStore()
 
   const { renderedHtml, error } = useTemplateRenderer({
@@ -132,18 +131,6 @@ function AppContent() {
     }
   }, [exportActiveTemplate, addToast])
 
-  const handleImportTemplate = useCallback(async () => {
-    try {
-      const serialized = await navigator.clipboard.readText()
-      importTemplate(serialized)
-      addToast("Template imported successfully.", "success")
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Could not import template."
-      addToast(message, "error")
-    }
-  }, [importTemplate, addToast])
-
   return (
     <AppLayout
       isTemplatePanelOpen={isTemplatePanelOpen}
@@ -177,7 +164,6 @@ function AppContent() {
           onCreateTemplate={handleCreateTemplate}
           onDeleteTemplate={deleteTemplate}
           onExportActiveTemplate={handleExportActiveTemplate}
-          onImportTemplate={handleImportTemplate}
           onRenameTemplate={renameTemplate}
           onSelectTemplate={selectTemplate}
           onUpdateTemplateContent={handleUpdateTemplateContent}
