@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 
+import { ToastProvider } from "@/components/ui/toast-provider"
+import { Toaster } from "@/components/ui/toaster"
 import { JsonEditor } from "@/features/editor/components/JsonEditor"
 import { AppLayout } from "@/features/layout/components/AppLayout"
 import { PreviewPanel } from "@/features/preview/components/PreviewPanel"
 import { TemplateManager } from "@/features/template/components/TemplateManager"
 import { useTemplateRenderer } from "@/features/template/hooks/useTemplateRenderer"
 import { useTemplateStore } from "@/features/template/hooks/useTemplateStore"
+import { useToast } from "@/hooks/use-toast"
 
 const JSON_INPUT_STORAGE_KEY = "json_input"
 const THEME_STORAGE_KEY = "theme"
@@ -36,10 +39,11 @@ function getStoredJsonInput() {
   return window.localStorage.getItem(JSON_INPUT_STORAGE_KEY) ?? "{}"
 }
 
-function App() {
+function AppContent() {
   const [jsonInput, setJsonInput] = useState<string>(() => getStoredJsonInput())
   const [isTemplatePanelOpen, setIsTemplatePanelOpen] = useState(false)
   const [theme, setTheme] = useState<Theme>(() => getStoredTheme())
+  const { addToast } = useToast()
 
   const {
     templates,
@@ -50,6 +54,7 @@ function App() {
     renameTemplate,
     updateTemplateContent,
     deleteTemplate,
+    exportActiveTemplate,
   } = useTemplateStore()
 
   const { renderedHtml, error } = useTemplateRenderer({
@@ -68,8 +73,12 @@ function App() {
       return
     }
 
-    window.localStorage.setItem(JSON_INPUT_STORAGE_KEY, jsonInput)
-  }, [jsonInput])
+    try {
+      window.localStorage.setItem(JSON_INPUT_STORAGE_KEY, jsonInput)
+    } catch {
+      addToast("Could not save JSON to local storage.", "error")
+    }
+  }, [jsonInput, addToast])
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -97,10 +106,45 @@ function App() {
     updateTemplateContent(activeTemplateId, content)
   }
 
+  const handleLoadJson = useCallback(
+    (json: string) => {
+      setJsonInput(json)
+      addToast("JSON file loaded successfully.", "success")
+    },
+    [addToast]
+  )
+
+  const handleLoadJsonError = useCallback(
+    (message: string) => {
+      addToast(message, "error")
+    },
+    [addToast]
+  )
+
+  const handleExportActiveTemplate = useCallback(async () => {
+    try {
+      const serialized = exportActiveTemplate()
+      await navigator.clipboard.writeText(serialized)
+      addToast("Active template copied to clipboard.", "success")
+    } catch {
+      addToast("Could not copy template to clipboard.", "error")
+    }
+  }, [exportActiveTemplate, addToast])
+
   return (
     <AppLayout
       isTemplatePanelOpen={isTemplatePanelOpen}
-      leftPanel={<JsonEditor onChange={setJsonInput} theme={theme} value={jsonInput} />}
+      leftPanel={
+        <JsonEditor
+          onChange={setJsonInput}
+          onFileLoad={handleLoadJson}
+          onFileLoadError={handleLoadJsonError}
+          theme={theme}
+          value={jsonInput}
+        />
+      }
+      onLoadJson={handleLoadJson}
+      onLoadJsonError={handleLoadJsonError}
       onTemplatePanelOpenChange={setIsTemplatePanelOpen}
       onToggleTheme={handleToggleTheme}
       rightPanel={
@@ -116,8 +160,10 @@ function App() {
         <TemplateManager
           activeTemplateContent={activeTemplateContent}
           activeTemplateId={activeTemplateId}
+          canExport={activeTemplate !== null}
           onCreateTemplate={handleCreateTemplate}
           onDeleteTemplate={deleteTemplate}
+          onExportActiveTemplate={handleExportActiveTemplate}
           onRenameTemplate={renameTemplate}
           onSelectTemplate={selectTemplate}
           onUpdateTemplateContent={handleUpdateTemplateContent}
@@ -126,6 +172,15 @@ function App() {
         />
       }
     />
+  )
+}
+
+function App() {
+  return (
+    <ToastProvider>
+      <AppContent />
+      <Toaster />
+    </ToastProvider>
   )
 }
 
