@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 
+import {
+  exportTemplate,
+  parseImportedTemplate,
+  TemplateSerializerError,
+} from "@/features/template/lib/template-serializer"
 import type { Template } from "@/features/template/types"
 
 const TEMPLATES_STORAGE_KEY = "templates"
@@ -116,6 +121,8 @@ export type TemplateStore = {
   renameTemplate: (id: string, name: string) => void
   updateTemplateContent: (id: string, content: string) => void
   deleteTemplate: (id: string) => void
+  exportActiveTemplate: () => string
+  importTemplate: (serialized: string) => Template
 }
 
 export function useTemplateStore(): TemplateStore {
@@ -227,6 +234,31 @@ export function useTemplateStore(): TemplateStore {
     [activeTemplateId, templates]
   )
 
+  const exportActiveTemplate = useCallback(() => {
+    if (!activeTemplate) {
+      throw new TemplateSerializerError("No active template to export.")
+    }
+
+    return exportTemplate(activeTemplate)
+  }, [activeTemplate])
+
+  const importTemplate = useCallback((serialized: string) => {
+    const { name, content } = parseImportedTemplate(serialized)
+    const now = Date.now()
+    const importedTemplate: Template = {
+      id: crypto.randomUUID(),
+      name,
+      content,
+      createdAt: now,
+      updatedAt: now,
+    }
+
+    setTemplates((currentTemplates) => [...currentTemplates, importedTemplate])
+    setActiveTemplateId(importedTemplate.id)
+
+    return importedTemplate
+  }, [])
+
   return {
     templates,
     activeTemplateId,
@@ -236,5 +268,7 @@ export function useTemplateStore(): TemplateStore {
     renameTemplate,
     updateTemplateContent,
     deleteTemplate,
+    exportActiveTemplate,
+    importTemplate,
   }
 }

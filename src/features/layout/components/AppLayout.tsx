@@ -41,6 +41,8 @@ type AppLayoutProps = {
   isTemplatePanelOpen: boolean
   onTemplatePanelOpenChange: (isOpen: boolean) => void
   onToggleTheme: () => void
+  onLoadJson: (json: string) => void
+  onLoadJsonError: (message: string) => void
 }
 
 export function AppLayout({
@@ -51,6 +53,8 @@ export function AppLayout({
   isTemplatePanelOpen,
   onTemplatePanelOpenChange,
   onToggleTheme,
+  onLoadJson,
+  onLoadJsonError,
 }: AppLayoutProps) {
   const templatePanelRef = usePanelRef()
   const [templatePanelSize, setTemplatePanelSize] = useState<number>(() =>
@@ -130,6 +134,8 @@ export function AppLayout({
         <Toolbar
           isTemplatePanelOpen={isTemplatePanelOpen}
           theme={theme}
+          onLoadJson={onLoadJson}
+          onLoadJsonError={onLoadJsonError}
           onToggleTemplatePanel={handleTemplatePanelToggle}
           onToggleTheme={onToggleTheme}
         />
